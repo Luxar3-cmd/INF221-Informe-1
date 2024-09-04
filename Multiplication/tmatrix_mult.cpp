@@ -11,6 +11,10 @@ using namespace std;
 
 
 /*
+En este programa, a diferencia de matrx_mult.cpp transpone la segunda matriz. Esto para lograr un mejor acceso que se traduce en eficiencia.
+*/
+
+/*
 Suposiciónes del programa:
 - Las matrices ingresadas tienen siempre una estructura correcta, significa que las rectangulares están en el orden correcto.
 */
@@ -18,7 +22,18 @@ Suposiciónes del programa:
 
 
 
+matrix transpose (const matrix& mat) {
+    int filas = mat.size();
+    int columnas = mat[0].size();
+    matrix trans(filas, vector<int>(columnas));
+    for ( int i = 0; i < filas; i++) {
+        for ( int j = 0; j < columnas; j++) {
+            trans[j][i] = mat[i][j];
+        }
+    }
 
+    return trans;
+}
 
 matrix matrix_mult(matrix& m1, matrix& m2){
     int FR, FC, SR, SC;
@@ -26,12 +41,15 @@ matrix matrix_mult(matrix& m1, matrix& m2){
     FC = m1[0].size(); //Cantidad de columnas primera matriz
     SR = m2.size(); //Cantidad de filas segunda matriz
     SC = m2[0].size(); //Cantidad de columnas segunda matriz
+
+    matrix m2T = transpose(m2);
+
     matrix result(FR,vector<int>(SC,0)); //La matriz resultante tiene FR * SC casillas.
 
     for ( int i = 0; i < FR; ++i) {
         for ( int j = 0; j < SC; ++j) {
             for ( int k = 0; k < FC; ++k) {
-                result[i][j] += m1[i][k] * m2[k][j];
+                result[i][j] += m1[i][k] * m2[j][k];
             }
         }
     }
@@ -42,11 +60,15 @@ matrix matrix_mult(matrix& m1, matrix& m2){
 matrix read_matrixs(ifstream& data) {    
     string line; 
     int n, m, num;
+    
+
+    
+
     if(!(data >> n >> m)) {
         return matrix(); //Retorna una matriz vacía si no hay más matrices para leer
     }
-    matrix trix(n, vector<int>(m,0)); //inicializa la matriz con todo en 0
-    for ( int i = 0; i < n; i++) {  //este for lee la data y rellena
+    matrix trix(n, vector<int>(m,0));
+    for ( int i = 0; i < n; i++) {
         for (int j = 0; j < m; j++) {
             data >> num;
             trix[i][j] = num;
