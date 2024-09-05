@@ -2,25 +2,45 @@
 #define STRASSEN_CPP
 
 /* 
-Este algoritmo considera las siguientes entradas:
-- Las matrices de entrada son de n*n, osea cuadradas, de este modo 
-no ocurrirán problemas para la recursión.
+Este algoritmo de Strassen asume que las matrices de entrada son cuadradas
+y que sus dimensiones son de la forma n x n. Esto evita problemas con la recursión 
+y garantiza que las matrices se puedan dividir en submatrices más pequeñas de igual tamaño.
 */
+
+
 #include <bits/stdc++.h>
 
 #define matrix vector<vector<int>>
 
 using namespace std;
 
+/**
+ * @brief Suma dos matrices cuadradas de tamaño split_index y almacena el resultado en una tercera matriz.
+ * 
+ * @param a Primera matriz a sumar.
+ * @param b Segunda matriz a sumar.
+ * @param c Matriz donde se almacenará el resultado de la suma.
+ * @param split_index Índice de división de las matrices a y b.
+ */
 void add_matrix(matrix& a, matrix& b, matrix& c, int split_index) {
     for ( int i = 0; i  < split_index; i++) {
         for ( int j = 0; j < split_index; j++) {
-            c[i][j] = a[i][j] + b[i][j];
+            c[i][j] = a[i][j] + b[i][j]; //Suma de los elementos correspondientes
         }
     }
     
 }   
 
+/**
+ * @brief Multiplica dos matrices cuadradas de tamaño n x n utilizando el algoritmo de Strassen.
+ * 
+ * Este algoritmo divide recursivamente las matrices de entrada en submatrices más pqeueñas,
+ * y combina los resultados parciales usando la técnica de Strassen.
+ * 
+ * @param m1 Primera matriz a multiplicar.
+ * @param m2 Segunda matriz a multiplicar.
+ * @return matrix Matriz resultante de la multiplicación de m1 y m2.
+ */
 matrix strassen_mult(matrix& m1, matrix& m2) {
     // Obtener las dimensiones de las matrices m1 y m2
     int col_1 = m1[0].size();

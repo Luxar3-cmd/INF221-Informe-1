@@ -6,10 +6,25 @@ using namespace std;
 #define matrix vector<vector<int>>
 
 
-/*
-Suposiciónes del programa:
-- Las matrices ingresadas tienen siempre una estructura correcta, significa que las rectangulares están en el orden correcto.
-*/
+/**
+ * Suposiciones del programa: 
+ * - Las matrices ingresadas tienen siempre una estructura correcta (rectangular).
+ * - La multiplicación se puede llevar a cabo si las columnas de la primera matriz (m1) coinciden con las filas de la segunda matriz (m2), es decir, FC == SR.
+ */
+
+/**
+ * @brief Multiplica dos matrices de cualquier tamaño
+ * 
+ * Esta función toma dos matrices m1 y m2 como parámetros, y realiza la multiplicación 
+ * matricial entre ambas, retornando la matriz resultante.
+ * 
+ * Supone que el número de columnas de m1 coincide con el número de filas de m2.
+ * La matriz resultante tendrá tantas filas como m1 y tantas columnas como m2.
+ * 
+ * @param m1 Matriz A de tamaño FR x FC (FR filas y FC columnas).
+ * @param m2 Matriz B de tamaño SR x SC (SR filas y SC columnas).
+ * @return matrix Matriz resultante de la multiplicación de m1 y m2, de tamaño FR x SC.
+ */
 matrix matrix_mult(matrix& m1, matrix& m2){
     int FR, FC, SR, SC;
     FR = m1.size(); //Cantidad de filas primera matriz

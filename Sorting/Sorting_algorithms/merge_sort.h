@@ -5,6 +5,17 @@
 #include "algorithms.h"
 using namespace std;
 
+
+/**
+ * @brief Combina dos subarreglos ordenados en un solo arreglo ordenado.
+ * 
+ * La función toma un arreglo dividido en dos subarreglos ordenados y los combina en un solo arreglo ordenado.
+ * 
+ * @param arr Arreglo principal.
+ * @param left Índice del primer elemento del arreglo.
+ * @param mid Índice del elemento medio del arreglo.
+ * @param right Índice del último elemento del arreglo.
+ */
 void merge(vector<int> &arr, int left, int mid, int right) {
 
     int n1 = mid - left + 1;
@@ -45,6 +56,16 @@ void merge(vector<int> &arr, int left, int mid, int right) {
     }
 }
 
+/**
+ * @brief Función recursiva que implementa el algoritmo Mergo Sort.
+ * 
+ * Divide el arreglo en dos mitades, las ordena recursivamente y luego las fusiona
+ * utilizando la función 'merge'.
+ *  
+ * @param arr Vector de enteros a ordenar (pasado por referencia).
+ * @param left Índice del primer elemento del arreglo.
+ * @param right Índice del último elemento del arreglo.
+ */
 void merge_sort(vector<int> &arr, int left, int right) {
     if (left >= right) 
         return;
