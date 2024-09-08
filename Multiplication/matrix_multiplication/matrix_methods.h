@@ -2,7 +2,7 @@
 #define MATRIX_METHODS
 
 #include <bits/stdc++.h>
-#define matrix vector<vector<int>> // Definimos "matrix" como un alias de vector<vector<int>>
+#define matrix vector<vector<int> > // Definimos "matrix" como un alias de vector<vector<int>>
 
 using namespace std;
 
@@ -60,4 +60,26 @@ matrix read_matrixs(ifstream& data) {
     return trix;
 }
 
+/**
+ * @brief Obtiene una submatriz de una matriz original.
+ * 
+ * Esta función recibe una matriz original y dos enteros n y m que indican
+ * 
+ * @param original Matriz original de la que se obtendrá la submatriz.
+ * @param n Número de filas de la submatriz.
+ * @param m Número de columnas de la submatriz.
+ * @return matrix Retorna una submatriz de tamaño n x m de la matriz original.
+ * 
+ */
+matrix get_submatrix(const matrix& original, int n, int m) {
+    matrix submatrix(n, vector<int>(m,0));
+
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < m; j++) {
+            submatrix[i][j] = original[i][j];
+        }
+    }
+
+    return submatrix;
+}
 #endif //MATRIX_METHODS

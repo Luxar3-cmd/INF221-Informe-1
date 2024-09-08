@@ -9,118 +9,126 @@ y garantiza que las matrices se puedan dividir en submatrices más pequeñas de 
 
 
 #include <bits/stdc++.h>
+#include "matrix_mult.h"
 
-#define matrix vector<vector<int>>
+#define matrix vector<vector<int> >
 
 using namespace std;
 
 /**
- * @brief Suma dos matrices cuadradas de tamaño split_index y almacena el resultado en una tercera matriz.
+ * @brief Suma dos matrices cuadradas de tamaño K y almacena el resultado en una tercera matriz.
+ * 
  * 
  * @param a Primera matriz a sumar.
  * @param b Segunda matriz a sumar.
  * @param c Matriz donde se almacenará el resultado de la suma.
- * @param split_index Índice de división de las matrices a y b.
+ * @param K Índice de división de las matrices a y b.
  */
-void add_matrix(matrix& a, matrix& b, matrix& c, int split_index) {
-    for ( int i = 0; i  < split_index; i++) {
-        for ( int j = 0; j < split_index; j++) {
+void add(matrix& a, matrix& b, matrix& c, int K) {
+    for ( int i = 0; i  < K; i++) {
+        for ( int j = 0; j < K; j++) {
             c[i][j] = a[i][j] + b[i][j]; //Suma de los elementos correspondientes
         }
     }
-    
 }   
+
+/**
+ * @brief Resta dos matrices cuadradas de tamaño K y almacena el resultado en una tercera matriz.
+ * 
+ * 
+ * @param a Primera matriz a restar.
+ * @param b Segunda matriz a restar.
+ * @param c Matriz donde se almacenará el resultado de la resta.
+ * @param K Índice de división de las matrices a y b.
+ */
+void substract(matrix& a, matrix& b, matrix& c, int K) {
+    for ( int i = 0; i < K; i++) {
+        for ( int j = 0; j < K; j++){
+            c[i][j] = a[i][j] - b[i][j];
+        }
+    }
+}
+
 
 /**
  * @brief Multiplica dos matrices cuadradas de tamaño n x n utilizando el algoritmo de Strassen.
  * 
- * Este algoritmo divide recursivamente las matrices de entrada en submatrices más pqeueñas,
- * y combina los resultados parciales usando la técnica de Strassen.
+ * Este algoritmo divide recursivamente las matrices de entrada en submatrices más pequeñas,
  * 
- * @param m1 Primera matriz a multiplicar.
- * @param m2 Segunda matriz a multiplicar.
- * @return matrix Matriz resultante de la multiplicación de m1 y m2.
+ * @param X Primera matriz a multiplicar.
+ * @param Y Segunda matriz a multiplicar.
+ * @return matrix Matriz resultante de la multiplicación de a y b.
  */
-matrix strassen_mult(matrix& m1, matrix& m2) {
-    // Obtener las dimensiones de las matrices m1 y m2
-    int col_1 = m1[0].size();
-    int row_1 = m1.size();
-    int col_2 = m2[0].size();
-    int row_2 = m2.size();
-    // Comprobar si las matrices pueden ser multiplicadas
-    if (col_1 != row_2) {
-        cout << "El numero de columnas de la matriz A debe ser igual al numero de filas de la matriz B \n";
-        return {}; // Retorna una matriz vacía en caso de que no se puedan multiplicar
+matrix strassen(matrix& X, matrix& Y ) {
+    int N = X.size();
+    int K = N/2;
+    if ( N <= 36) {
+        return matrix_mult(X,Y);
     }
-    // Se crea la matriz de resultado de las dimensiones correspondientes (row_1 x col_2), inicializada en ceros
-    matrix result_matrix( row_1, vector<int>(col_2,0));
 
-    //Caso base: Cuando la matriz es 1x1, se multiplica directamente
-    if ( col_1 == 1) result_matrix[0][0] = m1[0][0] * m2[0][0];
-    else {
+    matrix A(K,vector<int>(K,0)), B(K,vector<int>(K,0)), C(K,vector<int>(K,0)), D(K,vector<int>(K,0))
+    , E(K,vector<int>(K,0)), F(K,vector<int>(K,0)), G(K,vector<int>(K,0)), H(K,vector<int>(K,0));
 
-        //Dividir las matrices en submatrices más pequeñas
-        //El índice de división será col_1/2, que es el tamaño de las submatrices (n/2 x n/2)
-        int split_index = col_1 / 2; 
-        // Inicializar las submatrices que resultarán de la multiplicación
-        vector<int> row_vector(split_index,0); //Vector auxiliar para crear filas de ceros
+    matrix C1(K,vector<int>(K,0)), C2(K,vector<int>(K,0)), C3(K,vector<int>(K,0)), C4(K,vector<int>(K,0)), t1(K,vector<int>(K,0)), t2(K,vector<int>(K,0));
 
-        //Submatrices para la matriz de resultado
-        matrix result_matrix_00(split_index,row_vector);
-        matrix result_matrix_01(split_index,row_vector);
-        matrix result_matrix_10(split_index,row_vector);
-        matrix result_matrix_11(split_index,row_vector);
+    for (int i = 0; i < K; i++) {
+        for ( int j = 0; j < K; j++) {
+            A[i][j] = X[i][j];
+            B[i][j] = X[i][j + K];
+            C[i][j] = X[i + K][j];
+            D[i][j] = X[i + K][j + K];
 
-        // Submatrices de A (m1) y B (m2), que se utilizarán en las fórmulas de Strassen
-        matrix a00(split_index,row_vector);
-        matrix a01(split_index,row_vector);
-        matrix a10(split_index,row_vector);
-        matrix a11(split_index,row_vector);
-        matrix b00(split_index,row_vector);
-        matrix b01(split_index,row_vector);
-        matrix b10(split_index,row_vector);
-        matrix b11(split_index,row_vector);
-        
-        for ( int i = 0; i < split_index; i++) {
-            for ( int j = 0; j < split_index; j++) {
-                a00[i][j] = m1[i][j];
-                a01[i][j] = m1[i][j + split_index];
-                a10[i][j] = m1[split_index + i][j];
-                a11[i][j] = m1[i + split_index][j + split_index];
-
-                b00[i][j] = m2[i][j];
-                b01[i][j] = m2[i][j + split_index];
-                b10[i][j] = m2[split_index + i][j];
-                b11[i][j] = m2[i + split_index][j + split_index];
-            }
+            E[i][j] = Y[i][j];
+            F[i][j] = Y[i][j + K];
+            G[i][j] = Y[i + K][j];
+            H[i][j] = Y[i + K][j + K];
         }
-
-        // Realizar las multiplicaciónes necesarias para strassen
-        matrix c00_1 = strassen_mult(a00,b00);
-        matrix c00_2 = strassen_mult(a01,b10);
-        matrix c00_3 = strassen_mult(a00,b01);
-        matrix c00_4 = strassen_mult(a01,b11);
-        matrix c00_5 = strassen_mult(a10,b00);
-        matrix c00_6 = strassen_mult(a11,b10);
-        matrix c00_7 = strassen_mult(a10, b01);
-        matrix c00_8 = strassen_mult(a11, b11);
-
-        add_matrix( c00_1 , c00_2 , result_matrix_00 ,split_index);
-        add_matrix( c00_3, c00_4 ,  result_matrix_01 , split_index);
-        add_matrix( c00_5, c00_6, result_matrix_10, split_index);
-        add_matrix(c00_7,c00_8,result_matrix_11,split_index);
-
-        for ( int i = 0; i < split_index; i++) {
-            for ( int j = 0; j < split_index; j++) {
-                result_matrix[i][j] = result_matrix_00[i][j];
-                result_matrix[i][j+split_index] = result_matrix_01[i][j];
-                result_matrix[i+split_index][j] = result_matrix_10[i][j];
-                result_matrix[i+split_index][j+split_index] = result_matrix_11[i][j];
-            }
-        }
-
     }
-    return result_matrix;
-}   
+
+    add(A,D,t1,K); //t1 = A + D
+    add(E,H,t2,K); //t2 = E + H
+    matrix P1 = strassen(t1,t2); //P1 = (A+D)(E+H)
+
+    substract(G,E,t1,K); //t1 = G - E
+    matrix P2 = strassen(A,t1); //P2 = A(G-E)
+
+    add(A,B,t1,K); //t1 = A + B
+    matrix P3 = strassen(H,t1); //P3 = H(A+B)
+
+    substract(B,D,t1,K); //t1 = B - D
+    add(G,H,t2,K); //t2 = G + H
+    matrix P4 = strassen(t1,t2); //P4 = (B-D)(G+H)
+
+    substract(F,H,t1,K); //t1 = F - H
+    matrix P5 = strassen(A,t1); //P5 = A(F-H)
+
+    add(C,D,t1,K); //t1 = C + D
+    matrix P6 = strassen(t1,E); //P6 = (C+D)E
+
+    substract(A,C,t1,K); //t1 = A - C
+    add(E,F,t2,K); //t2 = E + F
+    matrix P7 = strassen(t1,t2); //P7 = (A-C)(E+F)
+
+    for (int i = 0; i < K; i++) {
+        for (int j = 0; j < K; j++) {
+            C1[i][j] = P1[i][j] + P2[i][j] - P3[i][j] + P4[i][j];
+            C2[i][j] = P5[i][j] + P3[i][j];
+            C3[i][j] = P6[i][j] + P2[i][j];
+            C4[i][j] = P5[i][j] + P1[i][j] - P6[i][j] - P7[i][j];
+        }
+    }
+
+    matrix result(N,vector<int>(N,0));
+    for ( int i = 0; i < K; i++) {
+        for ( int j = 0; j < K; j++) {
+            result[i][j] = C1[i][j];
+            result[i][j + K] = C2[i][j];
+            result[i + K][j] = C3[i][j];
+            result[i + K][j + K] = C4[i][j];
+        }
+    }
+    return result;
+}
+
 
 #endif // STRASSEN_CPP

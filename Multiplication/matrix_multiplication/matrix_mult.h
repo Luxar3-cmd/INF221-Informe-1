@@ -3,7 +3,7 @@
 
 #include <bits/stdc++.h>
 using namespace std;
-#define matrix vector<vector<int>>
+#define matrix vector<vector<int> >
 
 
 /**
@@ -40,6 +40,7 @@ matrix matrix_mult(matrix& m1, matrix& m2){
             }
         }
     }
+    
     return result;
 }
 

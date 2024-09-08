@@ -47,8 +47,8 @@ int partition(vector<int>& arr, int start, int end) {
  * @param start Índice inicial de la porción del arreglo a ordenar.
  * @param end Índice final de la porción del arreglo a ordenar.
  */
-void QuickSort(vector<int>& arr, int start, int end){
-    if ( start <= end) {
+void QuickSort(vector<int>& arr, int start, int end) {
+    if ( start < end) {
         int pivot = partition(arr, start, end);
 
         QuickSort(arr,start, pivot - 1);
