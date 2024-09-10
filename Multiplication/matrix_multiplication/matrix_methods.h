@@ -17,7 +17,7 @@ using namespace std;
  */
 void print_matrix(const matrix& mat) {
     if (mat.empty()) {
-        cout << "Matrix is empty or could not be read!" << endl;
+        cout << "La matriz está vacía." << endl;
         return;
     }
 

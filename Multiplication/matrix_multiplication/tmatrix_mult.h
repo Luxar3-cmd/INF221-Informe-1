@@ -8,22 +8,15 @@ using namespace std;
 #define matrix vector<vector<int> >
 
 /*
-    En este programa, a diferencia de matrix_mult.cpp, se tranpone la segunda matriz
-    antes de realizar la multiplicación. Esto mejora la eficiencia del acceso a la memoria
-    al acceder de forma secuencial a los elementos, mejorando la localidad espacial.
+    En este programa, a diferencia de matrix_mult.cpp, se traspone la segunda matriz
+    antes de realizar la multiplicación.
 */
 
-/*
-Suposiciónes del programa:
-- Las matrices ingresadas tienen siempre una estructura correcta (rectangular).
-- La multiplicación es válida si el número de columnas de la primera matriz es igual
-al número de filas de la segunda matriz.
-*/
 
 /**
- * @brief Transpone una matriz.
+ * @brief Traspone una matriz.
  * 
- * Esta función toma una matriz de tamaño "n x m" y retorna su transpuesta, de tamaño "m x n".
+ * Esta función toma una matriz de tamaño "n x m" y retorna su traspuesta, de tamaño "m x n".
  * Donde las filas se convierten en columnas.
  * 
  * @param mat La matriz de entrada a transponer.
@@ -43,9 +36,9 @@ matrix transpose (matrix& mat) {
 
 
 /**
- * @brief Multiplica dos matrices de cualquier tamaño con la optimización de transponer la segunda matriz.
+ * @brief Multiplica dos matrices de cualquier tamaño con la optimización de trasponer la segunda matriz.
  * 
- * Esta función realiza la multiplicación de dos matrices 'm1' y 'm2'. Antes de la multiplicación, transpone la matriz 'm2 para mejorar el acceso a los elementos, lo que aumenta la eficiencia de la multiplicación.
+ * Esta función realiza la multiplicación de dos matrices 'm1' y 'm2'. Antes de la multiplicación, traspone la matriz 'm2 para mejorar el acceso a los elementos, lo que aumenta la eficiencia de la multiplicación.
  * 
  * @param m1 Primera matriz (A) de tamaño FR x FC (FR filas y FC columnas).
  * @param m2 Segunda matriz (B) de tamaño SR x SC (SR filas y SC columnas).

@@ -53,61 +53,69 @@ void substract(matrix& a, matrix& b, matrix& c, int K) {
 /**
  * @brief Multiplica dos matrices cuadradas de tamaño n x n utilizando el algoritmo de Strassen.
  * 
- * Este algoritmo divide recursivamente las matrices de entrada en submatrices más pequeñas,
+ * Este algoritmo divide recursivamente las matrices de entrada en submatrices más pequeñas.
  * 
- * @param X Primera matriz a multiplicar.
- * @param Y Segunda matriz a multiplicar.
+ * @param A Primera matriz a multiplicar.
+ * @param B Segunda matriz a multiplicar.
  * @return matrix Matriz resultante de la multiplicación de a y b.
  */
-matrix strassen(matrix& X, matrix& Y ) {
-    int N = X.size();
+matrix strassen(matrix& A, matrix& B ) {
+    int N = A.size();
     int K = N/2;
-    if ( N <= 36) {
-        return matrix_mult(X,Y);
+    if ( N <= 2) {
+        return matrix_mult(A,B);
     }
 
-    matrix A(K,vector<int>(K,0)), B(K,vector<int>(K,0)), C(K,vector<int>(K,0)), D(K,vector<int>(K,0))
-    , E(K,vector<int>(K,0)), F(K,vector<int>(K,0)), G(K,vector<int>(K,0)), H(K,vector<int>(K,0));
+    matrix a(K,vector<int>(K,0)), b(K,vector<int>(K,0)), c(K,vector<int>(K,0)), d(K,vector<int>(K,0));
+    matrix e(K,vector<int>(K,0)), f(K,vector<int>(K,0)), g(K,vector<int>(K,0)), h(K,vector<int>(K,0));
 
     matrix C1(K,vector<int>(K,0)), C2(K,vector<int>(K,0)), C3(K,vector<int>(K,0)), C4(K,vector<int>(K,0)), t1(K,vector<int>(K,0)), t2(K,vector<int>(K,0));
 
     for (int i = 0; i < K; i++) {
-        for ( int j = 0; j < K; j++) {
-            A[i][j] = X[i][j];
-            B[i][j] = X[i][j + K];
-            C[i][j] = X[i + K][j];
-            D[i][j] = X[i + K][j + K];
+        for (int j = 0; j < K; j++) {
+            a[i][j] = A[i][j];
+            b[i][j] = A[i][j + K];
+            c[i][j] = A[i + K][j];
+            d[i][j] = A[i + K][j + K];
 
-            E[i][j] = Y[i][j];
-            F[i][j] = Y[i][j + K];
-            G[i][j] = Y[i + K][j];
-            H[i][j] = Y[i + K][j + K];
+            e[i][j] = B[i][j];
+            f[i][j] = B[i][j + K];
+            g[i][j] = B[i + K][j];
+            h[i][j] = B[i + K][j + K];
         }
     }
 
-    add(A,D,t1,K); //t1 = A + D
-    add(E,H,t2,K); //t2 = E + H
-    matrix P1 = strassen(t1,t2); //P1 = (A+D)(E+H)
 
-    substract(G,E,t1,K); //t1 = G - E
-    matrix P2 = strassen(A,t1); //P2 = A(G-E)
+    // P1 = (a + d)(e + h)
+    add(a, d, t1, K); // t1 = a + d
+    add(e, h, t2, K); // t2 = e + h
+    matrix P1 = strassen(t1, t2); // P1 = (a + d)(e + h)
 
-    add(A,B,t1,K); //t1 = A + B
-    matrix P3 = strassen(H,t1); //P3 = H(A+B)
+    // P2 = d(g-e)
+    substract(g, e, t1, K); // t1 = g - e
+    matrix P2 = strassen(d, t1); // P2 = d(g - e)
 
-    substract(B,D,t1,K); //t1 = B - D
-    add(G,H,t2,K); //t2 = G + H
-    matrix P4 = strassen(t1,t2); //P4 = (B-D)(G+H)
+    // P3 = (a+b)h
+    add(a, b, t1, K); // t1 = a + b
+    matrix P3 = strassen(t1, h); // P3 = (a + b)h
 
-    substract(F,H,t1,K); //t1 = F - H
-    matrix P5 = strassen(A,t1); //P5 = A(F-H)
+    // P4 = (b-d)(g+h)
+    substract(b, d, t1, K); // t1 = b - d
+    add(g, h, t2, K); // t2 = g + h
+    matrix P4 = strassen(t1, t2); // P4 = (b - d)(g + h)
 
-    add(C,D,t1,K); //t1 = C + D
-    matrix P6 = strassen(t1,E); //P6 = (C+D)E
+    // P5 = a(f-h)
+    substract(f, h, t1, K); // t1 = f - h
+    matrix P5 = strassen(a, t1); // P5 = a(f - h)
 
-    substract(A,C,t1,K); //t1 = A - C
-    add(E,F,t2,K); //t2 = E + F
-    matrix P7 = strassen(t1,t2); //P7 = (A-C)(E+F)
+    // P6 = (c+d)e
+    add(c, d, t1, K); // t1 = c + d
+    matrix P6 = strassen(t1, e); // P6 = (c + d)e
+
+    // P7 = (a-c)(e+f)
+    substract(a, c, t1, K); // t1 = a - c
+    add(e, f, t2, K); // t2 = e + f
+    matrix P7 = strassen(t1, t2); // P7 = (a - c)(e + f)
 
     for (int i = 0; i < K; i++) {
         for (int j = 0; j < K; j++) {

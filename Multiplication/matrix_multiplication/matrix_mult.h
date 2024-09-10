@@ -8,7 +8,7 @@ using namespace std;
 
 /**
  * Suposiciones del programa: 
- * - Las matrices ingresadas tienen siempre una estructura correcta (rectangular).
+ * - Las matrices ingresadas tienen siempre una estructura correcta, tanto para la multiplicación rectangular como cuadrada.
  * - La multiplicación se puede llevar a cabo si las columnas de la primera matriz (m1) coinciden con las filas de la segunda matriz (m2), es decir, FC == SR.
  */
 
